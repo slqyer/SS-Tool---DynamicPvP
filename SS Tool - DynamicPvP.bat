@@ -1,12 +1,12 @@
 ::[Bat To Exe Converter]
 ::
 ::YAwzoRdxOk+EWAjk
-::fBw5plQjdCyDJGyX8VAjFD1GTQqBM0GGIroL5uT07u6UnkkEWuMycYzLzKTOaLFapEznevY=
+::fBw5plQjdCyDJGyX8VAjFD1GTQqBM0GGIroL5uT07u6UnkkEWuMycYzLzKSeLudd40brFQ==
 ::YAwzuBVtJxjWCl3EqQJgSA==
 ::ZR4luwNxJguZRRnk
 ::Yhs/ulQjdF+5
 ::cxAkpRVqdFKZSjk=
-::cBs/ulQjdF+5
+::cBs/ulQjdFq5
 ::ZR41oxFsdFKZSDk=
 ::eBoioBt6dFKZSDk=
 ::cRo6pxp7LAbNWATEpCI=
@@ -95,6 +95,8 @@ echo [31m [JFT] [1;31;40mModified Files [0m
 echo [31m [JER] [1;31;40mExplorer restart [0m
 echo [31m [JDF] [1;31;40mDeleted files [0m
 echo [31m [JRF] [1;31;40mRenamed files [0m
+echo [31m [JON] [1;31;40mRenamed files (Old Names) [0m
+echo [31m [JNN] [1;31;40mRenamed files (New Names) [0m  
 echo [31m [JFS] [1;31;40mFile streams [0m
 echo [31m [JJC] [1;31;40mJarCache [0m
 echo.
@@ -154,6 +156,8 @@ if %M%==CP goto Companion
 
 if %M%==JDF goto journalDeletedFiles
 if %M%==JRF goto journalRenamedFiles
+if %M%==JON goto journalOldName
+if %M%==JNN goto journalNewName
 if %M%==JFT goto journalFileType
 if %M%==JFS goto journalFileStream
 if %M%==JER goto journalExplorerRestart
@@ -303,6 +307,16 @@ goto menu
 cls
 fsutil usn readJournal c: csv | findstr /I /C:"0x00200120" > %appdata%\Temp\streams.txt
 "%appdata%\Temp\streams.txt"
+goto menu
+:journalNewName
+cls
+fsutil usn readjournal c: csv | findstr /i /c:.exe | findstr /i /c:0x00002000 > %appdata%\Temp\newnamefiles.txt
+"%appdata%\Temp\newnamefiles.txt"
+goto menu
+:journalOldName
+cls
+fsutil usn readjournal c: csv | findstr /i /c:.exe | findstr /i /c:0x00001000 > %appdata%\Temp\oldnamefiles.txt
+"%appdata%\Temp\oldnamefiles.txt"
 goto menu
 :journalExplorerRestart
 cls
